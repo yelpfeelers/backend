@@ -39,9 +39,8 @@ server.post('/register', async (req, res) => {
   if (!isValid) {
     return errHelper(400, errors, res);
   }
-
   try {
-    const avatar = await gravatar.url(email, {
+    const avatar = await gravatar.url(username, {
       s: '200',
       r: 'pg',
       d: 'mm',
@@ -63,7 +62,6 @@ server.post('/register', async (req, res) => {
         // save hash password
         await User
           .update(id, { password: newUser.password });
-
         return res.status(200).json({
           username: newUser.username,
           password: newUser.password,
