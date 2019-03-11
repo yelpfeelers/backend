@@ -12,10 +12,9 @@ server.get('/', (req, res) => {
   const requestOptions = {
     headers: {
       accept: "application/json",
-      authorization: "Bearer p-s8xhyLlZIjNNulbfzkSbABf4B7T5AWov78Zm9aHPk1uGXFhiEGi53fB9lx1oRma3PWPX7jQZuabjdmqcEBechZrdtbI1wlOSrc8UY-HdtNBmNUhypWfjVnZQGDXHYx"
+      authorization: process.env.YELP_KEY
     }
   };
-
   axios
     .get(`https://api.yelp.com/v3/businesses/search?location=${location}& term=${term}`, requestOptions)
     .then(response => {
@@ -36,10 +35,9 @@ server.get('/reviews/:id', (req, res) => {
 
     headers: {
       accept: "application/json",
-      authorization: "Bearer p-s8xhyLlZIjNNulbfzkSbABf4B7T5AWov78Zm9aHPk1uGXFhiEGi53fB9lx1oRma3PWPX7jQZuabjdmqcEBechZrdtbI1wlOSrc8UY-HdtNBmNUhypWfjVnZQGDXHYx"
+      authorization: process.env.YELP_KEY
     }
   };
-
   axios
     .get(` https://api.yelp.com/v3/businesses/${id}/reviews`, requestOptions)
     .then(response => {
