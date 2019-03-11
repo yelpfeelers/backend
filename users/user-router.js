@@ -23,7 +23,6 @@ const auth = passport.authenticate('jwt', { session: false });
 server.get('/', async (req, res) => {
   try {
     const users = await User.find(req.query);
-
     res.status(200).json(users);
   } catch (err) {
     errHelper(500, err.errno || err, res);
