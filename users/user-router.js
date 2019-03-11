@@ -29,13 +29,12 @@ server.get('/', async (req, res) => {
     errHelper(500, err.errno || err, res);
   }
 });
-
 // @route    GET api/users/register
 // @desc     Register user
 // @Access   Public
 server.post('/register', async (req, res) => {
   const {
-    username, email, firstname, lastname, password,
+    name, email, password,
   } = req.body;
   const { errors, isValid } = validateRegisterInput(req.body);
   if (!isValid) {
@@ -49,7 +48,7 @@ server.post('/register', async (req, res) => {
       d: 'mm',
     });
     const [id] = await User.insert({
-      username, email, firstname, lastname, password, avatar,
+      name, email, password, avatar,
     }).returning('id');
     // get single user i just added
     const newUser = await User.findById({ id });
@@ -68,7 +67,6 @@ server.post('/register', async (req, res) => {
         return res.status(200).json({
           email: newUser.email,
           password: newUser.password,
-
         });
       });
     });
@@ -126,23 +124,31 @@ server.post('/login', async (req, res) => {
   }
 });
 
-
 // @route    GET api/auth/current
 // @desc     get current user
 // @Access   Public
 // username, email, firstname, lastname , password
 server.get('/current', auth, (req, res) => {
-  res.json(req.user);
-
-  // res.json({
-  //   id: req.user.id,
-  //   username: req.user.username,
-  //   email: req.user.email,
-  //   firstname: req.user.firstname,
-  //   lastname: req.user.lastname,
-  //   avatar: req.user.avatar,
-  //   created_at: req.user.created_at,
-  // });
+  res.status(200).json({
+    id: req.user.id,
+    username: req.user.username,
+    email: req.user.email,
+    avatar: req.user.avatar,
+    created_at: req.user.created_at,
+  });
 });
+// @route    GET api/auth/current:id
+// @desc     update
+// @Access   Public
+// server.get('/current/:id', auth, (req, res) => {
+//   const { id } = req.params;
+//   try {
+//     console.log(req.user.id);
+//     const user = User.findById({ id });
+//   } catch (err) {
+//     return errHelper(500, err.errno || err, res);
+//   }
+// });
+
 
 module.exports = server;
