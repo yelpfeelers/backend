@@ -8,6 +8,7 @@ const passport = require('passport');
 
 // routes
 const users = require('./users/user-router');
+const yelp = require('./yelp-api/yelp-router');
 
 // init
 const server = express();
@@ -31,5 +32,6 @@ require('./config/passport')(passport);
 
 // use route
 server.use('/api/users', users);
+server.use('/api/yelp', yelp);
 
 module.exports = server;

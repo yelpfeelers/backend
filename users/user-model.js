@@ -15,7 +15,7 @@ function find(query) {
       .select()
       .from('users')
       .orderBy('id', 'desc')
-      .where('firstname', 'like', `%${name}%`)
+      .where('name', 'like', `%${name}%`)
       .paginate(limit, page, true);
   }
 
