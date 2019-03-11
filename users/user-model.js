@@ -1,22 +1,19 @@
 const db = require('../data/dbConfig');
-const sqliteErrors = require('../errors/errorCode');
-
-
 // get all & query name & pagination
 // query by firstname
-function find(tbl, query) {
+function find(query) {
   const { limit = 10, page = 1, name } = query;
   let table;
   if (!name) {
     table = db
       .select()
-      .from(tbl)
+      .from('users')
       .orderBy('id', 'desc')
       .paginate(limit, page, true);
   } else {
     table = db
       .select()
-      .from(tbl)
+      .from('users')
       .orderBy('id', 'desc')
       .where('firstname', 'like', `%${name}%`)
       .paginate(limit, page, true);
@@ -25,38 +22,34 @@ function find(tbl, query) {
   return table;
 }
 // find by id
-function findById(tbl, id) {
+function findById(id) {
   return db
     .select()
-    .from(tbl)
+    .from('users')
     .where(id)
     .first();
 }
-function findBy(tbl, quert) {
+function findBy(query) {
   return db
     .select()
-    .from(tbl)
-    .where(quert)
+    .from('users')
+    .where(query)
     .first();
 }
-function insert(tbl, post) {
-  return db.insert(post).into(tbl);
+function insert(post) {
+  return db.insert(post).into('users');
 }
-function update(tbl, id, changes) {
+function update(id, changes) {
   return db
     .update(changes)
-    .from(tbl)
+    .from('users')
     .where({ id });
 }
-function remove(tbl, id) {
+function remove(id) {
   return db
     .del()
-    .from(tbl)
+    .from('users')
     .where({ id });
-}
-function errHelper(res, code, err) {
-  const error = err && err.errno ? sqliteErrors[err.errno] : err;
-  res.status(code).json({ message: error });
 }
 
 
@@ -66,6 +59,5 @@ module.exports = {
   insert,
   update,
   remove,
-  errHelper,
   findBy,
 };
