@@ -33,7 +33,7 @@ server.get('/', async (req, res) => {
 // @Access   Public
 server.post('/register', async (req, res) => {
   const {
-    name, email, password,
+    username, password,
   } = req.body;
   const { errors, isValid } = validateRegisterInput(req.body);
   if (!isValid) {
@@ -47,8 +47,9 @@ server.post('/register', async (req, res) => {
       d: 'mm',
     });
     const [id] = await User.insert({
-      name, email, password, avatar,
+      username, password, avatar,
     }).returning('id');
+    console.log(id)
     // get single user i just added
     const newUser = await User.findById({ id });
 
@@ -64,7 +65,7 @@ server.post('/register', async (req, res) => {
           .update(id, { password: newUser.password });
 
         return res.status(200).json({
-          email: newUser.email,
+          username: newUser.username,
           password: newUser.password,
         });
       });
@@ -77,7 +78,7 @@ server.post('/register', async (req, res) => {
 // @desc     login user
 // @Access   Public
 server.post('/login', async (req, res) => {
-  const { email, password } = req.body;
+  const { username, password, } = req.body;
   const { errors, isValid } = validateLoginInput(req.body);
   if (!isValid) {
     return errHelper(500, errors, res);
@@ -85,11 +86,11 @@ server.post('/login', async (req, res) => {
 
   try {
     // find user by email
-    const user = await User.findBy({ email });
+    const user = await User.findBy({ username });
 
 
     if (!user) {
-      errors.email = 'User not found';
+      errors.username = 'User not found';
       return errHelper(404, errors, res);
     }
     const isMatch = await bcrypt.compare(password, user.password);
@@ -97,7 +98,7 @@ server.post('/login', async (req, res) => {
       // what i return when user logged in
       const payload = {
         id: user.id,
-        email: user.email,
+        username: user.username,
         avatar: user.avatar,
       };
       req.user = payload;
@@ -131,7 +132,6 @@ server.get('/current', auth, (req, res) => {
   res.status(200).json({
     id: req.user.id,
     username: req.user.username,
-    email: req.user.email,
     avatar: req.user.avatar,
     created_at: req.user.created_at,
   });

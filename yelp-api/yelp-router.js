@@ -2,7 +2,7 @@ const server = require('express').Router();
 const axios = require("axios");
 
 
-
+http://localhost:5000/api/yelp?location=san diego&?term=taco
 
 server.get('/', (req, res) => {
   let location = req.query || 'Chelsea'
