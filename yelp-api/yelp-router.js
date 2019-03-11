@@ -33,6 +33,7 @@ server.get('/', (req, res) => {
 server.get('/reviews/:id', (req, res) => {
   const { id } = req.params;
   const requestOptions = {
+
     headers: {
       accept: "application/json",
       authorization: "Bearer p-s8xhyLlZIjNNulbfzkSbABf4B7T5AWov78Zm9aHPk1uGXFhiEGi53fB9lx1oRma3PWPX7jQZuabjdmqcEBechZrdtbI1wlOSrc8UY-HdtNBmNUhypWfjVnZQGDXHYx"
@@ -42,8 +43,8 @@ server.get('/reviews/:id', (req, res) => {
   axios
     .get(` https://api.yelp.com/v3/businesses/${id}/reviews`, requestOptions)
     .then(response => {
-      console.log(response.data.businesses)
-      res.status(200).json(response.data.businesses);
+      console.log(response.data.reviews)
+      res.status(200).json(response.data.reviews);
     })
     .catch(err => {
       res.status(500).json({ message: "Error Fetching Jokes", error: err });
