@@ -104,7 +104,7 @@ server.post('/login', async (req, res) => {
       jwt.sign(
         payload,
         keys.secretOrKey,
-        { expiresIn: 1000 * 60 * 60 * 24 },
+        { expiresIn: 1000 * 60 * 60 * 24 * 30 },
         (err, token) => {
           res.json({
             success: true,

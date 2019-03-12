@@ -5,32 +5,32 @@ const passport = require('passport')
 const db = require('../data/dbConfig')
 const errHelper = require('../errors/errorHelper');
 const auth = passport.authenticate('jwt', { session: false });
-
-
+const USER = require("../users/user-model")
+const bookmarksValidation = require('../validation/bookmarksValidation')
 
 //helper
 const getAllBookmarks = async (req, res) => {
-  const { limit = 10, page = 1 } = req.query
   try {
 
-    let bookmarks = await db.select("m.user_id", "b.*").from('user_bookmarks as m').join('bookmarks as b', 'b.id', 'm.bookmark_id').where({ user_id: req.user.id }).orderBy('id', 'desc').paginate(limit, page, true);
+    let users = await USER.find(req.query)
 
-    const results = bookmarks.data.map(async (bookmark) => {
-      let user = await db.select("u.id", "u.username", "u.created_at", "u.avatar").from('users as u ').where({ id: req.user.id })
-      bookmarks.user = user;
-
-      return bookmark
+    const results = users.data.map(async (user) => {
+      let bookmark = await db.select("m.user_id", "b.*").from('user_bookmarks as m').join('bookmarks as b', 'b.id', 'm.bookmark_id').where({ user_id: user.id })
+      console.log(bookmark)
+      user.bookmark = bookmark;
+      return user
     })
 
     Promise.all(results).then(completed => {
-      bookmarks.data = completed;
-      res.status(200).json(bookmarks)
+      users.data = completed;
+      res.status(200).json(users)
     })
 
   } catch (err) {
     return errHelper(500, err, res)
   }
 }
+
 // @route    GET api/booksmarks
 // @desc     get all bookmarks
 // @Access   Public 
@@ -60,14 +60,19 @@ server.get('/:id', auth, async (req, res) => {
 // @desc     post bookmark
 // @Access   private
 server.post('/', auth, async (req, res) => {
+  const { errors, isValid } = bookmarksValidation(req.body);
+  if (!isValid) {
+    return errHelper(400, errors, res);
+  }
+
   try {
-    const [posted] = await BOOKMARKS.insert(req.body);
+    const [posted] = await BOOKMARKS.insert(req.body).returning("id");
     if (posted) {
-      getAllBookmarks(req, res);
       await db.insert({
         user_id: req.user.id,
         bookmark_id: posted
       }).into("user_bookmarks");
+      getAllBookmarks(req, res);
     } else {
       return errHelper(400, "failed to bookmark yelp business", res)
 

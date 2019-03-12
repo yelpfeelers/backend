@@ -8,8 +8,8 @@ exports.up = (knex) => {
     tbl.boolean('is_closed');
     tbl.string('categories');
     tbl.integer('rating').unsigned()
-    tbl.integer('latitude');
-    tbl.integer('longitude');
+    tbl.string('latitude');
+    tbl.string('longitude');
     tbl.string('transactions');
     tbl.string('price');
     tbl.string('location');

@@ -37,7 +37,7 @@ function findBy(query) {
     .first();
 }
 function insert(post) {
-  return db.insert(post).into('bookmarks').returning("id");
+  return db.insert(post).into('bookmarks');
 }
 function update(id, changes) {
   return db
