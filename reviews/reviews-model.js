@@ -34,7 +34,7 @@ function findBy(query) {
     .select()
     .from('reviews')
     .where(query)
-    .first();
+
 }
 function insert(post) {
   return db.insert(post).into('reviews').returning("id");
