@@ -2,12 +2,12 @@ const server = require('express').Router();
 const axios = require("axios");
 
 
-http://localhost:5000/api/yelp?location=san diego&?term=taco
+// http://localhost:5000/api/yelp?location=New York&term=taco
 // @route    GET api/yelp
 // @desc     get business
 // @Access   Public
 server.get('/', (req, res) => {
-  let { term = "food", location = "New York City" } = req.query
+  let { term = "taco", location = "San Diego" } = req.query
 
   const requestOptions = {
     headers: {
@@ -16,7 +16,7 @@ server.get('/', (req, res) => {
     }
   };
   axios
-    .get(`https://api.yelp.com/v3/businesses/search?location=${location}& term=${term}`, requestOptions)
+    .get(` https://api.yelp.com/v3/businesses/search?location=${location}&term=${term}`, requestOptions)
     .then(response => {
       console.log(response.data.businesses)
       res.status(200).json(response.data.businesses);
