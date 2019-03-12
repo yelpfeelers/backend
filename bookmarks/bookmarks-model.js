@@ -49,7 +49,7 @@ function remove(id) {
   return db
     .del()
     .from('bookmarks')
-    .where({ id });
+    .where(id);
 }
 
 

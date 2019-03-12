@@ -10,10 +10,22 @@ const auth = passport.authenticate('jwt', { session: false });
 
 //helper
 const getAllBookmarks = async (req, res) => {
+  const { limit = 10, page = 1 } = req.query
   try {
-    const bookmarks = await db.select().from('user_bookmarks').join('bookmarks as b')
-    console.log(req.user)
-    res.status(200).json(bookmarks)
+    let user = await db.select().from('users').where({ id: req.user.id })
+
+    const results = user.data.map(async (user) => {
+      let bookmarks = await db.select("m.user_id", "b.*").from('user_bookmarks as m').join('bookmarks as b', 'b.id', 'm.bookmark_id').where({ user_id: req.user.id }).orderBy('id', 'desc')
+        .paginate(limit, page, true);
+      user.bookmarks = bookmarks;
+      console.log(bookmarks)
+      return user
+    })
+
+    Promise.all(results).then(completed => {
+      user.data = completed;
+      res.status(200).json(user)
+    })
 
   } catch (err) {
     return errHelper(500, err, res)
@@ -27,28 +39,97 @@ server.get('/', auth, async (req, res) => {
   getAllBookmarks(req, res);
 });
 
-// @route    GET api/bookmarks
+
+// @route    GET api/bookmarks/:id
+// @desc     get by id 
+// @Access   private
+server.get('/:id', auth, async (req, res) => {
+  const { id } = req.params
+  try {
+    const bookmarks = await db.select("m.user_id", "b.*").from('user_bookmarks as m').join('bookmarks as b', 'b.id', 'm.bookmark_id').where({ user_id: req.user.id, bookmark_id: id }).first()
+    if (bookmarks) {
+      res.status(200).json(bookmarks)
+    } else {
+      return errHelper(400, 'bookmark not found', res)
+    }
+
+  } catch (err) {
+    return errHelper(500, err, res)
+  }
+});
+
+// @route    POST api/bookmarks
 // @desc     post bookmark
 // @Access   private
 server.post('/', auth, async (req, res) => {
   try {
     const [posted] = await BOOKMARKS.insert(req.body);
     if (posted) {
-      const bookmarks = await BOOKMARKS.find(req.query);
-
-      res.status(200).json(bookmarks);
-      console.log(req.user.id)
+      getAllBookmarks(req, res);
       await db.insert({
         user_id: req.user.id,
         bookmark_id: posted
       }).into("user_bookmarks");
     } else {
-      return errHelper(500, "failed to bookmark project", res)
+      return errHelper(500, "failed to bookmark yelp business", res)
 
     }
   } catch (err) {
     return errHelper(500, err, res)
   }
 });
+
+// @route    DELETE api/bookmark/:id
+// @desc     Delete Bookmark
+// @Access   Public
+server.delete('/:id', auth, async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const exists = await db.select().from('user_bookmarks').where({ bookmark_id: id }).first();
+
+    if (exists) {
+
+      if (req.user.id !== exists.user_id) {
+
+        return errHelper(400, "Cannot delete someones bookmark", res)
+
+      } else {
+        await BOOKMARKS.remove({ id })
+        getAllBookmarks(req, res);
+      }
+
+    } else {
+      return res.status(404).json({ message: "bookmark with that id does not exists" });
+    }
+  } catch (err) {
+    return errHelper(500, err, res)
+  }
+});
+
+// @route    PUT api/bookmark/:id
+// @desc     update Bookmark
+// @Access   private
+// server.delete('/:id', auth, async (req, res) => {
+//   const { id } = req.params;
+
+//   try {
+//     const exists = await db('user_bookmarks').where({ bookmark_id: id }).first();
+
+//     console.log(req.user.id, exists.user_id);
+
+//     if (!exists) {
+//       return res.status(404).json({ message: "bookmark does not exists" });
+//     }
+
+//     if (req.user.id !== exists.user_id) {
+//       return errHelper(500, `Cannot update someones bookmark your id is ${req.user.id} = their id is ${exists.user_id}`, res)
+//     }
+//     await BOOKMARKS.remove({ id })
+//     getAllBookmarks(req, res);
+//   } catch (err) {
+//     return errHelper(res, err);
+//   }
+// });
 
 module.exports = server;
