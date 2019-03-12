@@ -14,7 +14,7 @@ const returnAllUsers = async (req, res) => {
 
   const results = users.data.map(async (user) => {
 
-    const reviews = await REVIEWS.findBy({ user_id: req.user.id });
+    const reviews = await REVIEWS.findBy({ user_id: user.id });
 
     console.log(reviews)
     user.stars = 0.0 + reviews.reduce((acc, val) => acc += val.rating, 0) / reviews.length || 0;
@@ -56,6 +56,8 @@ server.post('/', auth, async (req, res) => {
     if (prevReview) {
       return errHelper(405, 'You have already written a review for that business', res)
     } else {
+
+      console.log(user)
       await REVIEWS.insert({ url, text, rating, business_id, user_id, })
       returnAllUsers(req, res);
     }
