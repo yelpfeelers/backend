@@ -2,7 +2,7 @@
 exports.up = (knex) => {
   return knex.schema.createTable('bookmarks', tbl => {
     tbl.increments();
-    tbl.integer('business_id');
+    tbl.string('business_id');
     tbl.string('alias');
     tbl.string('image_url');
     tbl.boolean('is_closed');
@@ -15,7 +15,7 @@ exports.up = (knex) => {
     tbl.string('location');
     tbl.string('display_phone');
 
-
+    // business_id, alias, image_url, is_closed, categories, rating , latitude, longtitude, transactions, price, location, display_phone
   })
 };
 
