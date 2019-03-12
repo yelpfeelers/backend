@@ -110,7 +110,7 @@ server.delete('/:id', auth, async (req, res) => {
 // @route    PUT api/bookmark/:id
 // @desc     update Bookmark
 // @Access   private
-server.delete('/:id', auth, async (req, res) => {
+server.put('/:id', auth, async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -123,7 +123,7 @@ server.delete('/:id', auth, async (req, res) => {
         return errHelper(400, "Cannot delete someones bookmark", res)
 
       } else {
-        await BOOKMARKS.remove({ id })
+        await BOOKMARKS.update({ id }, req.body)
         getAllBookmarks(req, res);
       }
 

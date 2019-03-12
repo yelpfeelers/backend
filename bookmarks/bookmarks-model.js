@@ -43,7 +43,7 @@ function update(id, changes) {
   return db
     .update(changes)
     .from('bookmarks')
-    .where({ id });
+    .where(id);
 }
 function remove(id) {
   return db
