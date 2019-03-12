@@ -31,14 +31,12 @@ const getAllBookmarks = async (req, res) => {
     return errHelper(500, err, res)
   }
 }
-
 // @route    GET api/booksmarks
 // @desc     get all bookmarks
 // @Access   Public 
 server.get('/', auth, async (req, res) => {
   getAllBookmarks(req, res);
 });
-
 
 // @route    GET api/bookmarks/:id
 // @desc     get by id 
@@ -50,7 +48,7 @@ server.get('/:id', auth, async (req, res) => {
     if (bookmarks) {
       res.status(200).json(bookmarks)
     } else {
-      return errHelper(400, 'bookmark not found', res)
+      return errHelper(404, 'bookmark not found', res)
     }
 
   } catch (err) {
@@ -71,7 +69,7 @@ server.post('/', auth, async (req, res) => {
         bookmark_id: posted
       }).into("user_bookmarks");
     } else {
-      return errHelper(500, "failed to bookmark yelp business", res)
+      return errHelper(400, "failed to bookmark yelp business", res)
 
     }
   } catch (err) {

@@ -10,21 +10,24 @@ const USER = require("../users/user-model")
 
 const returnAllUsers = async (req, res) => {
 
-  let users = await USER.find(req.query);
+  try {
+    let users = await USER.find(req.query);
 
-  const results = users.data.map(async (user) => {
-    const reviews = await REVIEWS.findBy({ user_id: user.id });
-    user.stars = Math.floor(0.0 + reviews.reduce((acc, val) => acc += val.rating, 0) / reviews.length || 0);
-    user.reviews = reviews;
-    return user;
+    const results = users.data.map(async (user) => {
+      const reviews = await REVIEWS.findBy({ user_id: user.id });
+      user.stars = 0.0 + reviews.reduce((acc, val) => acc += val.rating, 0) / reviews.length || 0;
+      user.reviews = reviews;
+      return user;
 
-  });
+    });
 
-  Promise.all(results).then(completed => {
-    users.data = completed;
-    res.status(200).json(users);
-  });
-
+    Promise.all(results).then(completed => {
+      users.data = completed;
+      res.status(200).json(users);
+    });
+  } catch (err) {
+    return errHelper(500, err, res)
+  }
 }
 
 // @route    GET api/reviews
@@ -36,8 +39,22 @@ server.get('/', auth, async (req, res) => {
 });
 
 // @route    GET api/reviews/:id
-// @desc     get reviews by user
+// @desc     get reviews by user id
 // @Access   private
+server.get('/:id', auth, async (req, res) => {
+  const { id } = req.params;
+  try {
+    console.log(id)
+    const reviews = await REVIEWS.findBy({ business_id: id })
+    if (reviews.length) {
+      res.status(200).json(reviews)
+    } else {
+      return errHelper(404, "reviews not found ", res)
+    }
+  } catch (err) {
+    return errHelper(500, err, res)
+  }
+});
 
 
 // @route    GET api/reviews
@@ -63,19 +80,18 @@ server.post('/', auth, async (req, res) => {
       if (posted) {
         returnAllUsers(req, res);
       } else {
-        return errHelper(400, 'something went wrong adding a review pls contact your badass backend developer', res)
+        return errHelper(405, 'something went wrong adding a review pls contact your badass backend developer', res)
       }
     }
   }
   catch (err) {
-
     return errHelper(500, err, res)
   }
 });
 
 // @route    GET api/reviews
 // @desc     delete all review
-// @Access   Testing
+// @Access   Testing ONLY FOR TESTING
 server.delete('/', auth, async (req, res) => {
   try {
     await REVIEWS.remove({ user_id: 83 })
