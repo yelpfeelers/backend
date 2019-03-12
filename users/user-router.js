@@ -79,7 +79,7 @@ server.post('/login', async (req, res) => {
   const { username, password, } = req.body;
   const { errors, isValid } = validateLoginInput(req.body);
   if (!isValid) {
-    return errHelper(500, errors, res);
+    return errHelper(400, errors, res);
   }
 
   try {

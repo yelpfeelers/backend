@@ -12,25 +12,17 @@ describe('bookmarks crud', () => {
     await db('users').truncate();
 
   })
-
   describe('register route', () => {
-
     it('should return a status code of 200 upon success', async (done) => {
-
       const response = await request(server).post('/api/users/register').send({
         username: 'miranda2',
         password: 'miranda',
-
       });
-
       expect(response.status).toBe(200);
-
       done();
-
     });
 
     it('should return status code 400 if body is invalid', async () => {
-
       const response = await request(server).post('/api/users/register').send({
         usernaame: '',
         password: '',
