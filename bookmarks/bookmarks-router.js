@@ -120,7 +120,7 @@ server.put('/:id', auth, async (req, res) => {
 
       if (req.user.id !== exists.user_id) {
 
-        return errHelper(400, "Cannot delete someones bookmark", res)
+        return errHelper(400, "Cannot update someones bookmark", res)
 
       } else {
         await BOOKMARKS.update({ id }, req.body)
