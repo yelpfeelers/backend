@@ -14,7 +14,7 @@ const returnAllUsers = async (req, res) => {
 
   const results = users.data.map(async (user) => {
     const reviews = await REVIEWS.findBy({ user_id: user.id });
-    user.stars = 0.0 + reviews.reduce((acc, val) => acc += val.rating, 0) / reviews.length || 0;
+    user.stars = Math.floor(0.0 + reviews.reduce((acc, val) => acc += val.rating, 0) / reviews.length || 0);
     user.reviews = reviews;
     return user;
 
@@ -35,6 +35,11 @@ server.get('/', auth, async (req, res) => {
 
 });
 
+// @route    GET api/reviews/:id
+// @desc     get reviews by user
+// @Access   private
+
+
 // @route    GET api/reviews
 // @desc     post a review
 // @Access   Private  
@@ -54,13 +59,16 @@ server.post('/', auth, async (req, res) => {
       return errHelper(405, 'You have already written a review for that business', res)
     } else {
 
-      console.log(user)
-      await REVIEWS.insert(req.body)
-      returnAllUsers(req, res);
+      const posted = await REVIEWS.insert({ url, text, rating, business_id, user_id })
+      if (posted) {
+        returnAllUsers(req, res);
+      } else {
+        return errHelper(400, 'something went wrong adding a review pls contact your badass backend developer', res)
+      }
     }
-
   }
   catch (err) {
+
     return errHelper(500, err, res)
   }
 });
