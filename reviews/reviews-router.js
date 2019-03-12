@@ -13,10 +13,7 @@ const returnAllUsers = async (req, res) => {
   let users = await USER.find(req.query);
 
   const results = users.data.map(async (user) => {
-
     const reviews = await REVIEWS.findBy({ user_id: user.id });
-
-    console.log(reviews)
     user.stars = 0.0 + reviews.reduce((acc, val) => acc += val.rating, 0) / reviews.length || 0;
     user.reviews = reviews;
     return user;
@@ -58,7 +55,7 @@ server.post('/', auth, async (req, res) => {
     } else {
 
       console.log(user)
-      await REVIEWS.insert({ url, text, rating, business_id, user_id, })
+      await REVIEWS.insert(req.body)
       returnAllUsers(req, res);
     }
 
