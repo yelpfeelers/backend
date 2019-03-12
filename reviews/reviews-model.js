@@ -15,7 +15,7 @@ function find(query) {
       .select()
       .from('reviews')
       .orderBy('id', 'desc')
-      .where('alias', 'like', `%${name}%`)
+      .where('text', 'like', `%${name}%`)
       .paginate(limit, page, true);
   }
 
