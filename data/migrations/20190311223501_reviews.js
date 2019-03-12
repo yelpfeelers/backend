@@ -14,4 +14,5 @@ exports.up = knex => knex.schema.createTable('reviews', (tbl) => {
 
   tbl.timestamps(true, true);
 });
+//fields  [ url, text, rating, business_id, user_id, ] 
 exports.down = knex => knex.schema.dropTableIfExists('reviews');

@@ -10,7 +10,7 @@ const REVIEWS = require("./reviews-model")
 // @desc     post a review
 // @Access   Private  
 server.post('/', (req, res) => {
-
+  //fields  [ url, text, rating, business_id, user_id, ] 
 });
 
 module.exports = server;
