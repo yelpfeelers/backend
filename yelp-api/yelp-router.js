@@ -1,7 +1,6 @@
 const server = require('express').Router();
 const axios = require("axios");
-
-
+const errHelper = require("../errors/errorHelper")
 // http://localhost:5000/api/yelp?location=New York&term=taco
 // @route    GET api/yelp
 // @desc     get business
@@ -18,13 +17,13 @@ server.get('/', (req, res) => {
   axios
     .get(` https://api.yelp.com/v3/businesses/search?location=${location}&term=${term}`, requestOptions)
     .then(response => {
-      console.log(response.data.businesses)
       res.status(200).json(response.data.businesses);
     })
     .catch(err => {
-      res.status(500).json({ message: "Error Fetching Jokes", error: err });
+      return errHelper(500, err.errno || err, res);
     });
 });
+
 // @route    GET api/yelp/reviews
 // @desc     get business
 // @Access   Public
@@ -41,11 +40,10 @@ server.get('/reviews/:id', (req, res) => {
   axios
     .get(` https://api.yelp.com/v3/businesses/${id}/reviews`, requestOptions)
     .then(response => {
-      console.log(response.data.reviews)
       res.status(200).json(response.data.reviews);
     })
     .catch(err => {
-      res.status(500).json({ message: "Error Fetching Jokes", error: err });
+      return errHelper(500, err.errno || err, res);
     });
 });
 
