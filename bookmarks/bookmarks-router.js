@@ -12,19 +12,19 @@ const auth = passport.authenticate('jwt', { session: false });
 const getAllBookmarks = async (req, res) => {
   const { limit = 10, page = 1 } = req.query
   try {
-    let user = await db.select().from('users').where({ id: req.user.id })
 
-    const results = user.data.map(async (user) => {
-      let bookmarks = await db.select("m.user_id", "b.*").from('user_bookmarks as m').join('bookmarks as b', 'b.id', 'm.bookmark_id').where({ user_id: req.user.id }).orderBy('id', 'desc')
-        .paginate(limit, page, true);
-      user.bookmarks = bookmarks;
-      console.log(bookmarks)
-      return user
+    let bookmarks = await db.select("m.user_id", "b.*").from('user_bookmarks as m').join('bookmarks as b', 'b.id', 'm.bookmark_id').where({ user_id: req.user.id }).orderBy('id', 'desc').paginate(limit, page, true);
+
+    const results = bookmarks.data.map(async (bookmark) => {
+      let user = await db.select("u.id", "u.username", "u.created_at", "u.avatar").from('users as u ').where({ id: req.user.id })
+      bookmarks.user = user;
+
+      return bookmark
     })
 
     Promise.all(results).then(completed => {
-      user.data = completed;
-      res.status(200).json(user)
+      bookmarks.data = completed;
+      res.status(200).json(bookmarks)
     })
 
   } catch (err) {
@@ -110,26 +110,29 @@ server.delete('/:id', auth, async (req, res) => {
 // @route    PUT api/bookmark/:id
 // @desc     update Bookmark
 // @Access   private
-// server.delete('/:id', auth, async (req, res) => {
-//   const { id } = req.params;
+server.delete('/:id', auth, async (req, res) => {
+  const { id } = req.params;
 
-//   try {
-//     const exists = await db('user_bookmarks').where({ bookmark_id: id }).first();
+  try {
+    const exists = await db.select().from('user_bookmarks').where({ bookmark_id: id }).first();
 
-//     console.log(req.user.id, exists.user_id);
+    if (exists) {
 
-//     if (!exists) {
-//       return res.status(404).json({ message: "bookmark does not exists" });
-//     }
+      if (req.user.id !== exists.user_id) {
 
-//     if (req.user.id !== exists.user_id) {
-//       return errHelper(500, `Cannot update someones bookmark your id is ${req.user.id} = their id is ${exists.user_id}`, res)
-//     }
-//     await BOOKMARKS.remove({ id })
-//     getAllBookmarks(req, res);
-//   } catch (err) {
-//     return errHelper(res, err);
-//   }
-// });
+        return errHelper(400, "Cannot delete someones bookmark", res)
+
+      } else {
+        await BOOKMARKS.remove({ id })
+        getAllBookmarks(req, res);
+      }
+
+    } else {
+      return res.status(404).json({ message: "bookmark with that id does not exists" });
+    }
+  } catch (err) {
+    return errHelper(500, err, res)
+  }
+});
 
 module.exports = server;
