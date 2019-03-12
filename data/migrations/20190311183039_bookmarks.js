@@ -14,6 +14,7 @@ exports.up = (knex) => {
     tbl.string('price');
     tbl.string('location');
     tbl.string('display_phone');
+    tbl.string('my_rating');
 
     // business_id, alias, image_url, is_closed, categories, rating , latitude, longtitude, transactions, price, location, display_phone
   })
