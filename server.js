@@ -22,11 +22,6 @@ server.use(function (req, res, next) {
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });
-server.use(
-  express.urlencoded({
-    extended: true,
-  }),
-);
 server.use(helmet());
 server.use(logger('dev'));
 
