@@ -25,7 +25,7 @@ server.get('/', (req, res) => {
 });
 
 // @route    GET api/yelp/reviews
-// @desc     get business
+// @desc     get reviews
 // @Access   Public
 // example ID : os09iVkYkzIg9G1xEIepiA
 server.get('/reviews/:id', (req, res) => {

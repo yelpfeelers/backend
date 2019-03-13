@@ -16,7 +16,7 @@ const getAllBookmarks = async (req, res) => {
 
     const results = users.data.map(async (user) => {
       let bookmark = await db.select("m.user_id", "b.*").from('user_bookmarks as m').join('bookmarks as b', 'b.id', 'm.bookmark_id').where({ user_id: user.id })
-      console.log(bookmark)
+
       user.bookmark = bookmark;
       return user
     })
@@ -45,6 +45,7 @@ server.get('/:id', auth, async (req, res) => {
   const { id } = req.params
   try {
     const bookmarks = await db.select("m.user_id", "b.*").from('user_bookmarks as m').join('bookmarks as b', 'b.id', 'm.bookmark_id').where({ user_id: req.user.id, bookmark_id: id }).first()
+    console.log(req.user.id)
     if (bookmarks) {
       res.status(200).json(bookmarks)
     } else {
