@@ -11,7 +11,6 @@
   - [Table of Contents](#table-of-contents)
   - [DATA SCHEMA](#data-schema)
   - [Summary Table of API Endpoints](#summary-table-of-api-endpoints)
-    - [](#)
     - [Register 🤖](#register-%F0%9F%A4%96)
     - [Login ☠️](#login-%E2%98%A0%EF%B8%8F)
     - [Yelp Data 🔱](#yelp-data-%F0%9F%94%B1)
@@ -23,8 +22,7 @@
 
 ## DATA SCHEMA
 
-## Summary Table of API Endpoints
-### 
+## Summary Table of API Endpoints 
 | Type   | Endpoints             | Description                                             |
 | ------ | --------------------- | ------------------------------------------------------- |
 | POST   | /api/users/register   | Register user                                           |
