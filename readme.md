@@ -11,12 +11,13 @@
   - [Table of Contents](#table-of-contents)
   - [DATA SCHEMA](#data-schema)
   - [Summary Table of API Endpoints](#summary-table-of-api-endpoints)
-    - [](#2)
+    - [](#)
     - [Register 🤖](#register-%F0%9F%A4%96)
     - [Login ☠️](#login-%E2%98%A0%EF%B8%8F)
     - [Yelp Data 🔱](#yelp-data-%F0%9F%94%B1)
     - [Bookmarks 🔒](#bookmarks-%F0%9F%94%92)
     - [Reviews 📝](#reviews-%F0%9F%93%9D)
+    - [✨ Tech Used ✨](#%E2%9C%A8-tech-used-%E2%9C%A8)
     - [Author](#author)
 
 
@@ -261,7 +262,35 @@
     ]
 }
 ```
-
+### ✨ Tech Used ✨
+```
+"dependencies": {
+    "axios": "^0.18.0",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^6.2.0",
+    "express": "^4.16.4",
+    "gravatar": "^1.8.0",
+    "helmet": "^3.15.1",
+    "jsonwebtoken": "^8.5.0",
+    "knex": "^0.16.3",
+    "knex-paginator": "^1.3.1",
+    "morgan": "^1.9.1",
+    "passport": "^0.4.0",
+    "passport-jwt": "^4.0.0",
+    "pg": "^7.8.1",
+    "sqlite3": "^4.0.6",
+    "validator": "^10.11.0"
+  },
+  "devDependencies": {
+    "eslint": "^5.15.1",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.16.0",
+    "jest": "^24.3.1",
+    "nodemon": "^1.18.10",
+    "supertest": "^4.0.0"
+  },
+```
 
 
 ### Author
