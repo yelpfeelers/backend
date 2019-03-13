@@ -27,6 +27,7 @@
 | Type   | Endpoints             | Description                                             |
 | ------ | --------------------- | ------------------------------------------------------- |
 | POST   | /api/users/register   | Register user                                           |
+| GET    | /api/users/current    | get current user                                        |
 | POST   | /api/users/login      | login                                                   |
 | GET    | /api/yelp             | get yelp business details & query location and term     |
 | GET    | /api/yelp/reviews/:id | get business reviews by id business_id                  |
