@@ -16,13 +16,13 @@ const server = express();
 
 // middleware
 server.use(express.json());
+server.use(cors());
 server.use(
   express.urlencoded({
-    extended: false,
+    extended: true,
   }),
 );
 server.use(helmet());
-server.use(cors());
 server.use(logger('dev'));
 
 // passport
