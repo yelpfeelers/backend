@@ -1,5 +1,8 @@
 # 🔥 BACKEND  yelp - feelers  🔥
 
+### API ><>  https://yelpfeelers.herokuapp.com/ <><
+
+
 ## Project Management
 
  [Trello](https://trello.com/b/N8pN0SZV/yelp-feelers) 
@@ -7,20 +10,18 @@
 ## Table of Contents
 
 - [🔥 BACKEND yelp - feelers 🔥](#%F0%9F%94%A5-backend-yelp---feelers-%F0%9F%94%A5)
+    - [API ><> https://yelpfeelers.herokuapp.com/ <><](#api--httpsyelpfeelersherokuappcom)
   - [Project Management](#project-management)
   - [Table of Contents](#table-of-contents)
-  - [DATA SCHEMA](#data-schema)
   - [Summary Table of API Endpoints](#summary-table-of-api-endpoints)
     - [Register 🤖](#register-%F0%9F%A4%96)
     - [Login ☠️](#login-%E2%98%A0%EF%B8%8F)
     - [Yelp Data 🔱](#yelp-data-%F0%9F%94%B1)
     - [Bookmarks 🔒](#bookmarks-%F0%9F%94%92)
     - [Reviews 📝](#reviews-%F0%9F%93%9D)
+  - [DATA SCHEMA](#data-schema)
     - [✨ Tech Used ✨](#%E2%9C%A8-tech-used-%E2%9C%A8)
     - [Author](#author)
-
-
-## DATA SCHEMA
 
 ## Summary Table of API Endpoints 
 | Type   | Endpoints             | Description                                             |
@@ -260,6 +261,15 @@
     ]
 }
 ```
+## DATA SCHEMA
+`Schema table`
+![](assets/01.png)
+
+`Diagram of group flow`
+
+![](assets/02.png)
+
+
 ### ✨ Tech Used ✨
 ```
 "dependencies": {
@@ -289,6 +299,7 @@
     "supertest": "^4.0.0"
   },
 ```
+
 
 
 ### Author
