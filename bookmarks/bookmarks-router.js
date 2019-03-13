@@ -10,12 +10,18 @@ const bookmarksValidation = require('../validation/bookmarksValidation')
 
 //helper
 const getAllBookmarks = async (req, res) => {
+  const { limit = 10, page = 1, name } = req.query;
+
   try {
 
-    let users = await USER.find(req.query)
+    let users = await db
+      .select()
+      .from('users')
+      .where({ id: req.user.id })
+      .paginate(limit, page, true);
 
     const results = users.data.map(async (user) => {
-      let bookmark = await db.select("m.user_id", "b.*").from('user_bookmarks as m').join('bookmarks as b', 'b.id', 'm.bookmark_id').where({ user_id: user.id })
+      let bookmark = await db.select("m.*", "b.*").from('user_bookmarks as m').join('bookmarks as b', 'b.id', 'm.bookmark_id').where({ user_id: user.id })
 
       user.bookmark = bookmark;
       return user
@@ -44,12 +50,11 @@ server.get('/', auth, async (req, res) => {
 server.get('/:id', auth, async (req, res) => {
   const { id } = req.params
   try {
-    const bookmarks = await db.select("m.user_id", "b.*").from('user_bookmarks as m').join('bookmarks as b', 'b.id', 'm.bookmark_id').where({ user_id: req.user.id, bookmark_id: id }).first()
-    console.log(req.user.id)
-    if (bookmarks) {
-      res.status(200).json(bookmarks)
+    const bookmark = findById({ id })
+    if (bookmark) {
+      res.status(200).json(bookmark);
     } else {
-      return errHelper(404, 'bookmark not found', res)
+      res.status(404).json({ message: 'bookmark not found' })
     }
 
   } catch (err) {
