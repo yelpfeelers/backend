@@ -8,19 +8,17 @@
 
 - [Data Schema](#data-schema-data-structures)
 - [Summary Table of API Endpoints](#summary-table-of-api-endpoints)
-- [Auth Routes](#auth-routes)
-  - [Register](#register)
-  - [Login](#login)
+
 
 ## DATA SCHEMA
 
-###  table schema
 
 
 
 
 
 
+## Summary Table of API Endpoints
 | Syntax    | Description |
 | --------- | ----------- |
 | Header    | Title       |
