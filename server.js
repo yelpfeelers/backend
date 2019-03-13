@@ -32,6 +32,17 @@ server.use(passport.initialize());
 // passport config require all passport [AUTH] important to run passport-confifg
 require('./config/passport')(passport);
 
+const db = require('./data/dbConfig')
+server.get('/sentiment', async (req, res) => {
+  try {
+    const sentiment = await db('sentiment_review')
+    res.status(200).json(sentiment)
+
+  } catch (err) {
+    res.status(500).json(err)
+  }
+});
+
 // use route
 server.use('/api/users', users);
 server.use('/api/yelp', yelp);
