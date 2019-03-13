@@ -31,7 +31,7 @@
 | POST   | /api/users/login      | login                                                   |
 | GET    | /api/yelp             | get yelp business details & query location and term     |
 | GET    | /api/yelp/reviews/:id | get business reviews by id business_id                  |
-| GET    | /api/bookmarks        | get all bookmarks and all users                         |
+| GET    | /api/bookmarks        | get all bookmarks and current user                         |
 | GET    | /api/bookmarks/:id    | get bookmark by id only you can only get your bookmarks |
 | POST   | /api/users/login      | add business to your bookmarks                          |
 | PUT    | /api/bookmarks/:id    | update only your bookmarks                              |
