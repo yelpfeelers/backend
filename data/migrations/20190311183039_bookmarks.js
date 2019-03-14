@@ -4,6 +4,7 @@ exports.up = (knex) => {
     tbl.increments();
     tbl.string('business_id');
     tbl.string('alias');
+    tbl.string('name');
     tbl.string('image_url');
     tbl.boolean('is_closed');
     tbl.string('categories');
