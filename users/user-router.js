@@ -48,7 +48,7 @@ server.post('/register', async (req, res) => {
     const [id] = await User.insert({
       username, password, avatar,
     }).returning('id');
-    console.log(id)
+
     // get single user i just added
     const newUser = await User.findById({ id });
 
@@ -60,14 +60,30 @@ server.post('/register', async (req, res) => {
         }
         newUser.password = hash;
         // save hash password
-        await User
+        const user = await User
           .update(id, { password: newUser.password });
-        return res.status(200).json({
-          username: newUser.username,
-          password: newUser.password,
-        });
       });
     });
+    const payload = {
+      id: newUser.id,
+      username: newUser.username,
+      avatar: newUser.avatar,
+    };
+    req.user = payload;
+    // sign token
+    jwt.sign(
+      payload,
+      keys.secretOrKey,
+      { expiresIn: 1000 * 60 * 60 * 24 * 30 },
+      (err, token) => {
+        res.json({
+          success: true,
+          token: `Bearer ${token}`, // need to have space after bearer is important
+          user: payload,
+        });
+      },
+    );
+
   } catch (err) {
     return errHelper(500, err.errno || err, res);
   }
@@ -85,8 +101,6 @@ server.post('/login', async (req, res) => {
   try {
     // find user by email
     const user = await User.findBy({ username });
-
-
     if (!user) {
       errors.username = 'User not found';
       return errHelper(404, errors, res);
