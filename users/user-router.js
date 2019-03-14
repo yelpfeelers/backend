@@ -84,13 +84,6 @@ server.post('/register', async (req, res) => {
       },
     );
 
-
-
-
-
-
-
-
   } catch (err) {
     return errHelper(500, err.errno || err, res);
   }
